@@ -14,9 +14,26 @@ export class Service<T> {
         return response;
     }
 
-    public async getOne<K>(where: any): Promise<T> {
+    public async update(where: any, data: T){
+        console.log(where, data)
+        
         // @ts-ignore
-        const response = await this.Model.create({ data });
+        const response = await this.Model.update({
+            data,
+            where
+        })
+        return response
+    }
+
+    public async getAll(): Promise<T[]> {
+        // @ts-ignore
+        const response = await this.Model.findMany();
+        return response;
+    }
+    
+    public async getBy(where: any): Promise<T> {
+        // @ts-ignore
+        const response = await this.Model.findFirst(where);
         return response;
     }
 }
