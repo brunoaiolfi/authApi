@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaClientOptions } from "@prisma/client/runtime";
 
 export class Service<T> {
+    
     public Model: PrismaClient<PrismaClientOptions, never, undefined>;
 
     constructor(Model: any) {
@@ -15,8 +16,6 @@ export class Service<T> {
     }
 
     public async update(where: any, data: T){
-        console.log(where, data)
-        
         // @ts-ignore
         const response = await this.Model.update({
             data,
@@ -34,6 +33,12 @@ export class Service<T> {
     public async getBy(where: any): Promise<T> {
         // @ts-ignore
         const response = await this.Model.findFirst(where);
+        return response;
+    }
+
+    public async delete(where: any): Promise<T> {
+        // @ts-ignore
+        const response = await this.Model.delete({ where });
         return response;
     }
 }

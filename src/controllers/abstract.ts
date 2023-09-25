@@ -61,4 +61,19 @@ export class Controller<T> {
         }
     }
 
+    public async delete(req: Request, res: Response) {
+        try {
+            const { id } = req.params,
+                existentObj = await this.service.getBy({ where: { id: Number(id) } });
+
+            if (!existentObj) return res.status(404).send(errorMessages[404]);
+
+            await this.service.delete({ id: Number(id) });
+
+            return res.status(204).send();
+        } catch (err) {
+            return res.status(500).send(errorMessages[500]);
+        }
+    }
+
 }
