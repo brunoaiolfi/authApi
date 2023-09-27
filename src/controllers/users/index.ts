@@ -17,8 +17,8 @@ class UserController extends Controller<User> {
                 hashedPassword = generateHash(password),
                 existentUser: User = await UserService.getBy({
                     AND: [
-                        {username},
-                        {password: hashedPassword}
+                        { username },
+                        { password: hashedPassword }
                     ]
                 });
 
@@ -59,7 +59,7 @@ class UserController extends Controller<User> {
         try {
             const { id } = req.params,
                 { password, ...rest }: User = req.body,
-                hashedPassword = generateHash(password),
+                hashedPassword = password ? generateHash(password) : undefined,
                 existentObj = await UserService.getBy({ id: Number(id) });
 
             if (!existentObj) return res.status(404).send(errorMessages[404]);
@@ -91,6 +91,24 @@ class UserController extends Controller<User> {
             if (!response) return res.status(404).send(errorMessages[404])
 
             return res.json({ ...response, password: '' });
+        } catch (err) {
+            console.log(err)
+            return res.status(500).send(errorMessages[500]);
+        }
+    }
+
+    public async getByName(req: Request, res: Response) {
+        try {
+            const { name } = req.params,
+                response = await UserService.getManyBy({
+                    name: {
+                        contains: name
+                    }
+                });
+
+            if (!response) return res.status(404).send(errorMessages[404])
+
+            return res.json(response.map(user => ({ ...user, password: '' })));
         } catch (err) {
             console.log(err)
             return res.status(500).send(errorMessages[500]);

@@ -36,6 +36,12 @@ export class Service<T> {
         return response;
     }
 
+    public async getManyBy(where: any): Promise<T[]> {
+        // @ts-ignore
+        const response = await this.Model.findMany({ where });
+        return response;
+    }
+
     public async delete(where: any): Promise<T> {
         // @ts-ignore
         const response = await this.Model.delete({ where });
